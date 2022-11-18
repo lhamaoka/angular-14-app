@@ -8,7 +8,7 @@ pipeline{
         spec:
         containers:
         - name: shell
-          image: lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0
+          image: lhamaoka/jenkins-nodo-java-bootcamp:1.0
           command:
           - sleep
           args:
