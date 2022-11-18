@@ -1,41 +1,32 @@
 pipeline{
 
   agent {
-    node {
-      label 'node-nodejs'
-    }
+      kubernetes {
+        yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+        containers:
+        - name: shell
+          image: lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0
+          command:
+          - sleep
+          args:
+          - infinity
+        '''
+        defaultContainer 'shell'
+      }
   }
 
   environment {
     registryCredential='docker-hub-credentials'
-    registryFrontend = 'franaznarteralco/frontend-demo'
+    registryFrontend = 'lhamaoka/angular-14-app'
   }
 
   stages {
     stage('Build') {
       steps {
         sh 'npm install && npm run build'
-      }
-    }
-
-    stage('SonarQube analysis') {
-      steps {
-        withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
-          sh 'npm run sonar'
-        }
-      }
-    }
-
-    stage('Quality Gate') {
-      steps {
-        timeout(time: 10, unit: "MINUTES") {
-          script {
-            def qg = waitForQualityGate()
-            if (qg.status != 'OK') {
-               error "Pipeline aborted due to quality gate failure: ${qg.status}"
-            }
-          }
-        }
       }
     }
 
@@ -69,7 +60,7 @@ pipeline{
             sh 'rm -r configuracion'
           }
         }
-        sh 'git clone https://github.com/dberenguerdevcenter/kubernetes-helm-docker-config.git configuracion --branch test-implementation'
+        sh 'git clone https://github.com/lhamaoka/kubernetes-helm-docker-config.git configuracion --branch test-implementation'
         sh 'kubectl apply -f configuracion/kubernetes-deployment/angular-14-app/manifest.yml -n default --kubeconfig=configuracion/kubernetes-config/config'
       }
 
