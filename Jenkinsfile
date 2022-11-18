@@ -3,16 +3,16 @@ pipeline{
   agent {
       kubernetes {
         yaml '''
-        apiVersion: v1
-        kind: Pod
-        spec:
-        containers:
-        - name: shell
-          image: lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0
-          command:
-          - sleep
-          args:
-          - infinity
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: shell
+    image: lhamaoka/jenkins-nodo-java-bootcamp:1.0
+    command:
+    - sleep
+    args:
+    - infinity
         '''
         defaultContainer 'shell'
       }
