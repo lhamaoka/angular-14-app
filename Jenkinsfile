@@ -36,7 +36,12 @@ spec:
   stages {
     stage('Build') {
       steps {
-        sh 'npm install && npm run build'
+        sh 'npm install'
+        sh 'npm run build &'
+        sleep 20
+        sh 'ls -la'
+        sh 'cd src'
+        sh 'ls -la'
       }
     }
 
