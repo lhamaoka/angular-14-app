@@ -22,7 +22,7 @@ spec:
     command:
     - sleep
     args:
-  - infinity
+    - infinity
         '''
         defaultContainer 'shell'
       }
@@ -39,9 +39,6 @@ spec:
         sh 'npm install'
         sh 'npm run build &'
         sleep 20
-        sh 'ls -la'
-        sh 'cd src'
-        sh 'ls -la'
       }
     }
 
