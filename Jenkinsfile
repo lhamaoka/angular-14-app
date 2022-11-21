@@ -3,6 +3,8 @@ pipeline{
   agent {
       kubernetes {
         yaml '''
+apiVersion: v1
+kind: Pod
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,22 +13,13 @@ metadata:
     app: spring-boot-app
     type: back-end
 spec:
-  template:
-    metadata:
-      name: spring-boot-app
-      labels:
-        app: spring-boot
-        type: back-end
-    spec:
-      containers:
-        - name: spring-boot-app
-          image: lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0
-          imagePullPolicy: Always
-  replicas: 1
-  selector:
-    matchLabels:
-      app: spring-boot
-      type: back-end
+  containers:
+  - name: shell
+    image: lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0
+    command:
+    - sleep
+    args:
+    - infinity
         '''
         defaultContainer 'shell'
       }
@@ -42,7 +35,7 @@ spec:
       steps {
         sh 'npm install'
         sh 'npm run build &'
-        sleep 15
+        sleep 20
       }
     }
 
@@ -89,4 +82,3 @@ spec:
     }
   }
 }
-
