@@ -1,43 +1,44 @@
-pipeline{
-
+pipeline{    
   agent {
-      kubernetes {
-        yaml '''
+    kubernetes {
+            yaml '''
 apiVersion: v1
 kind: Pod
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: spring-boot-app
-  labels:
-    app: spring-boot-app
-    type: back-end
 spec:
-  containers:
-  - name: shell
-    image: lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0
-    command:
-    - sleep
-    args:
-    - infinity
-        '''
+  containers:
+  - name: shell
+    image: lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-socket-volume
+    securityContext:
+      privileged: true
+  volumes:
+  - name: docker-socket-volume
+    hostPath:
+      path: /var/run/docker.sock
+      type: Socket
+    command:
+    - sleep
+    args:
+    - infinity
+'''
         defaultContainer 'shell'
-      }
-  }
-
-  environment {
-    registryCredential='docker-hub-credentials'
-    registryFrontend = 'lhamaoka/angular-14-app'
-  }
-
-  stages {
-    stage('Build') {
-      steps {
-        sh 'npm install'
-        sh 'npm run build &'
-        sleep 20
-      }
-    }
+        }
+    }  environment {
+    registryCredential='jenkins_dockerhub'
+    registryFrontend = 'juanllorenzogomis/frontend-demo'
+  }  stages {
+    stage('Build') {
+      steps {
+        sh 'npm install'
+	sh 'npm run build &'
+	sleep 20
+	sh 'ls -la'
+	sh 'cd src'
+	sh 'ls -la'
+      }
+    }
 
     stage('Push Image to Docker Hub') {
       steps {
