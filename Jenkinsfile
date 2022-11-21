@@ -1,7 +1,7 @@
-pipeline{    
+pipeline{
   agent {
     kubernetes {
-            yaml '''
+      yaml '''
 apiVersion: v1
 kind: Pod
 spec:
@@ -24,10 +24,10 @@ spec:
     - infinity
 '''
         defaultContainer 'shell'
-        }
-    }  environment {
+    }
+  }  environment {
     registryCredential='jenkins_dockerhub'
-    registryFrontend = 'juanllorenzogomis/frontend-demo'
+    registryFrontend = 'lhamaoka/jenkins-nodo-nodejs-bootcamp:1.0'
   }  stages {
     stage('Build') {
       steps {
